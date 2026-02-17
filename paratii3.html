@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>love you to the moon and back 💗</title>
+
+<style>
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+overflow-x:hidden; /* solo bloquea horizontal */
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+transition:background 1s ease;
+color:#ffe5ec;
+}
+
+/* SECCIONES */
+.seccion{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+opacity:0;
+pointer-events:none;
+transition:opacity 1s ease;
+padding:40px;
+text-align:center;
+box-sizing:border-box; /* evita que el padding desplace */
+}
+
+.seccion.activa{
+opacity:1;
+pointer-events:auto;
+}
+
+/* BOTONES */
+button{
+background:#c9184a;
+color:#ffe5ec;
+border:none;
+padding:12px 28px;
+border-radius:30px;
+cursor:pointer;
+margin-top:25px;
+font-size:15px;
+transition:0.3s ease;
+}
+
+button:hover{
+transform:scale(1.08);
+background:#a4133c;
+}
+
+/* ================= SOBRES ================= */
+
+.gridSobres{
+display:grid;
+grid-template-columns:repeat(6, 1fr); /* 6 columnas fijas */
+gap:30px;
+width:90%;
+max-width:1100px;
+margin-top:40px;
+justify-items:center;
+}
+
+.sobre{
+width:100px;   /* más pequeños */
+height:65px;
+position:relative;
+cursor:pointer;
+opacity:0;
+transform:translateY(30px);
+transition:0.6s ease;
+}
+
+.sobre.visible{
+opacity:1;
+transform:translateY(0);
+}
+
+.base{
+width:100%;
+height:100%;
+background:#ff4d88;
+border-radius:8px;
+position:absolute;
+bottom:0;
+}
+
+.tapa{
+width:100%;
+height:100%;
+background:#800f2f;
+position:absolute;
+top:0;
+left:0;
+clip-path:polygon(0 0,50% 65%,100% 0);
+transform-origin:top;
+transition:transform 0.7s ease;
+}
+
+.sobre.abierto .tapa{
+transform:rotateX(180deg);
+}
+
+/* CARTA */
+.overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(20,0,30,0.6);
+opacity:0;
+pointer-events:none;
+transition:0.4s ease;
+}
+
+.overlay.activo{
+opacity:1;
+pointer-events:auto;
+}
+
+.carta{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%) scale(0);
+background:#ff758f;
+color:#3a0f1c;
+padding:30px;
+border-radius:18px;
+width:340px;
+max-width:90%;
+transition:0.5s ease;
+}
+
+.carta.activa{
+transform:translate(-50%,-50%) scale(1);
+}
+
+/* ================= FRASES ================= */
+
+.fraseCancion{
+font-size:20px;
+max-width:600px;
+min-height:60px;
+transition:opacity 0.8s ease;
+}
+
+/* ================= POLAROIDS ================= */
+
+.timeline{
+width:100%;
+height:60vh;              /* altura fija */
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+align-items:flex-start;   /* importante */
+gap:30px;
+margin-top:20px;
+overflow:hidden;          /* nada se sale */
+}
+
+.polaroid{
+width:180px;
+background:#ffe0e9;
+padding:15px 15px 50px 15px;
+border-radius:12px;
+box-shadow:0 20px 40px rgba(0,0,0,0.4);
+opacity:0;
+transform:scale(0.6) translateY(-100px);
+transition:0.8s cubic-bezier(.34,1.56,.64,1);
+}
+
+#timeline button{
+margin-top:30px;
+position:relative;
+z-index:10;
+}
+
+.polaroid.visible{
+opacity:1;
+transform:scale(1) translateY(0);
+}
+
+.polaroid img{
+width:100%;
+border-radius:8px;
+display:block;
+}
+
+.caption{
+margin-top:10px;
+text-align:center;
+font-size:14px;
+color:#590d22;
+}
+
+/* Flecha */
+.flecha{
+position:absolute;
+bottom:-20px;
+right:50px;
+font-size:35px;
+cursor:pointer;
+transition:0.3s ease;
+}
+
+.flecha:hover{
+transform:scale(1.2);
+}
+
+#mensajeFinal{
+white-space: pre-line;
+width: 90%;
+max-width: 1600px;
+margin: 0 auto;
+line-height: 1.8;
+text-align: justify;
+}
+
+/* ================================= */
+
+</style>
+</head>
+
+<body>
+
+<!-- INICIO -->
+<div class="seccion activa" id="inicio">
+<h1>helloou, javi 💗</h1>
+<p>siento que no podamos estar juntos este día, pero te preparé este pequeño detallito</p>
+<button onclick="iniciarMusica(); cambiarSeccion('sobres','linear-gradient(135deg,#590d22,#a4133c,#ff4d6d)')">
+comenzar!!
+</button>
+</div>
+
+<!-- SOBRES -->
+<div class="seccion" id="sobres">
+<h1>50 razones por las que te amo 💌</h1>
+<div class="gridSobres" id="grid"></div>
+<button onclick="cambiarSeccion('canciones','linear-gradient(135deg,#3a0ca3,#7209b7,#f72585)')">
+siguienteee
+</button>
+</div>
+
+<!-- FRASES -->
+<div class="seccion" id="canciones">
+<h1>mosquik references that remind me of you🎵</h1>
+<div class="fraseCancion" id="fraseCancion"></div>
+<button onclick="cambiarSeccion('timeline','linear-gradient(135deg,#240046,#5a189a,#c77dff)')">
+mira nuestros recuerdossss ✨
+</button>
+</div>
+
+<!-- TIMELINE -->
+<div class="seccion" id="timeline">
+<h1>our story 📸</h1>
+<div class="timeline" id="timelineContainer"></div>
+<div class="flecha" onclick="siguienteFoto()">➡️</div>
+<div class="flecha" id="flecha" onclick="siguienteFoto()">➜</div>
+<button onclick="cambiarSeccion('final','linear-gradient(135deg,#3a0f1c,#800f2f,#ff4d6d)')">
+ir al final 💌
+</button>
+</div>
+
+<!-- FINAL -->
+<div class="seccion" id="final">
+<h1>one last thing...</h1>
+<p id="mensajeFinal"></p>
+<button onclick="preguntaFinal()">
+da click jeje
+</button>
+</div>
+
+<div class="overlay" id="overlay" onclick="cerrarCarta()"></div>
+<div class="carta" id="carta"></div>
+
+<script>
+
+/* CAMBIO SECCIÓN */
+function cambiarSeccion(id,fondo){
+document.querySelectorAll('.seccion').forEach(sec=>{
+sec.classList.remove('activa');
+});
+document.getElementById(id).classList.add('activa');
+document.body.style.background=fondo;
+}
+
+/* ======== EDITA AQUÍ ======== */
+
+/* SOBRES */
+const textos=[
+"tienes la sonrisa más bonita que jamás haya visto",
+"tu risa, me encanta lo contagiosa que es",
+"tus ojos tienen un brillo que me encanta",
+"tu personalidad es tan única y auténtica",
+"la confianza que me generas",
+"amo tu voz, tiene un no sé qué que me hipnotiza",
+"me encantan tus bromas a pesar de lo raras que pueden ser algunas",
+"tu cabello es tan suave y por alguna razón siempre huele bien",
+"adoro lo honesto que eres",
+"admiro tu inteligencia y capacidad de hacer las cosas",
+"tu estilo, me encanta cómo te vistes",
+"me encantan tus palabras y consejos porque siempre sabes qué decir",
+"tu amabilidad con el mundo, jamás había conocido a alguien con un corazón tan noble como el tuyo",
+"amo que siempre buscas darle tiempo a cada persona que te importa",
+"lo paciente que eres, especialmente conmigo",
+"el entusiasmo y esfuerzo que le pones a todo lo que haces",
+"tu capacidad de perdonar",
+"lo impredecible que puedes llegar a ser",
+"tu confianza y empatía, no solo en mí sino también en tus amigos",
+"lo leal que eres con todas esas personas que son importantes para ti",
+"el respeto que no solo me tienes a mí, sino también a tu entorno",
+"la alegría y felicidad que emanas",
+"lo mucho que me cuidas y la manera en la que me proteges",
+"tu existencia es más importante de lo que crees, por lo menos para mí",
+"lo mucho que puedes llegar a sentir, pero lo poco que puedes llegar a decir",
+"la manera tan cómoda en la que duermes",
+"amo lo segura que me haces sentir",
+"lo auténtico y único que eres",
+"eso que tú llamas defectos es lo que te hace especial ante mis ojos",
+"todo el cariño que tienes para dar, y todo el amor que me das",
+"me encanta que contigo puedo ser rara sin sentir que lo soy",
+"tu sorprendete habilidad con los videojuegos",
+"lo especial y única que me haces sentir",
+"la manera en la que me escuchas, incluso cuando no sé explicar bien lo que siento",
+"cómo recuerdas detalles pequeños que para mí significan mucho",
+"tu forma de preocuparte por mí y por todos",
+"lo tranquila que me siento cuando estoy contigo",
+"cómo haces que los silencios no sean incómodos",
+"la forma en la que reaccionas cuando algo te emociona",
+"tu lado tierno que no siempre muestras",
+"cómo me haces sentir prioridad sin necesidad de decirlo",
+"la manera en la que me miras",
+"tu sentido del humor en los momentos menos esperados",
+"cómo me inspiras a ser mejor cada día",
+"tu forma de demostrar cariño en los pequeños gestos",
+"cómo me haces sentir en casa, incluso sin estarlo",
+"tu forma de cuidar a quienes amas",
+"la paz que me transmites",
+"cómo haces que incluso los días difíciles sean menos pesados",
+"te amo a ti simplemente porque eres tú",
+];
+
+/* FRASES */
+const frasesCanciones=[
+"quiero ser el aire que respiras",
+"te prometo pasar mi vida amándote, javi",
+"pienso en tus ojitos, de todo el planeta son mis favoritos",
+"no soy nada cuando estoy sin ti",
+"tendría un cable en la cabeza conectado a ti",
+"me casaría contigo el 3/09",
+"quiero que me cuentes siquiera qué animales viste en las nubes",
+"eres tú, no quiero a nadie más",
+"no quiero tener otro camino si no es contigo",
+"tú eres mi palabra favorita",
+"por ti viajaría a japón y llenaría mi depa de plantas para que se vea mejor",
+];
+
+/* POLAROIDS */
+const eventos=[
+{texto:"29/11/2025 - gracias por ayudarme a grabar", imagen:"foto1.jpeg"},
+{texto:"07/12/2025 - nuestra primera salidaa", imagen:"foto2.jpeg"},
+{texto:"15/12/2025 - tú fuiste mi razón y ánimos para pasar ese fukin examen de química", imagen:"foto3.jpeg"},
+{texto:"21/12/2025 - este día fue cuando me dijiste que te gustaba!!", imagen:"foto4.jpeg"},
+{texto:"03/01/2026 - our first kiss<3 (nunca olvidaré que estábamos viendo jjk)", imagen:"foto5.jpeg"},
+{texto:"17/01/2026 - fue de mis salidas favoritas, muchas gracias", imagen:"foto6.jpeg"},
+{texto:"31/01/2026 - nuestra última salida, pero no la última (mi helado estaba más rico btw)", imagen:"foto7.jpeg"}
+];
+
+let textoFinal = ` no sé exactamente en qué momento fue; no sé si fue cuando me ayudaste a grabar, no sé fue cuando empezamos a platicar y me mandaste los vídeos 5 años después, no sé si fue la primera vez que nos vimos en persona, la primera vez que hicimos llamada, la primera vez que juegamos junto. no sé cuándo fue que pasaste de ser alguien que me gustaba a convertirte en alguien que siento como hogar. solo sé que un día empecé a notar que mi paz tenía tu nombre, que mis canciones favoritas empezaban a tener tu cara, y que cada día se sentía incompleto si no estabas tú.
+hay algo en ti que me cambió. no de una manera tipo "quiero cambiar para gustarle", sino de una manera tipo "quiero cambiar para que funcione". me hiciste creer en cosas que antes me daban miedo. siempre he sido de las que piensan demasiado hasta la más mínima cosa, de las que se sienten full inseguras, de las que dudan, de las que se asustan cuando el futuro se ve tan lejos, pero a la vez tan cerca. la idea de formar algo para siempre, de imaginar una vida entera al lado de alguien, del siempre hecho de estar con alguien me aterraba… me aterra. y, sin embargo, cuando pienso en ti, no me asusta. se siente como algo posible. se siente bonito. se siente como algo a lo que no debería temer.
+si tú fueras squirtle yo sería yo, porque yo siempre elegiré a squirtle. no importa cuántos pokemones haya, qué tan habilidosos, que tan bonitos o lo mucho que quieran que los elija. nada de eso importa porque yo siempre voy a elegir a squirtle. en este y en todos los universos, en todas mis versiones y en cada comienzo.
+no se trata solo de que me gustes, se trata de que te reconozco. reconozco tu risa como mi sonido favorito, tu voz como mi calma, tu mirada como un lugar seguro.
+no hay día en el que no quiera hablarte. no hay canción de amor que no me haga pensar en lo mucho que me gustaría que estuvieras a mi lado escuchándola conmigo. no hay logro que no quiera contarte, ni problema que no quiera enfrentar sabiendo que estás ahí.
+sé que no soy perfecta. sé que tengo defectos, miedos, cosas que todavía estoy aprendiendo a sanar. pero contigo no me siento insuficiente. me siento vista. me siento protegida. me siento elegida. me siento prioridad sin que tengas que decirlo. y eso es algo que no sabía cuánto necesitaba hasta que lo tuve.
+quiero estar contigo en todo. en tus días brillantes y en los que no lo son tanto. en tus victorias y en tus "derrotas". en tus enojos y alegrías. en tus silencios y en esas veces que no paras de hablar. en tus dudas y en tus respuestas. quiero que sepas que no solo estoy para cuando todo sea fácil; estoy para algo real no fake. para hablar cuando algo te duela. para resolver cuando algo falle como la buena ingeniera que voy a ser. para crecer juntos, aunque a veces tropecemos.
+no te amo desde lo carnal.
+te amo desde la conciencia.
+desde saber quién eres y aún así elegirte.
+y si algún día las cosas se ponen difíciles, quiero que recuerdes que no estoy aquí porque me paguen o algo, estoy aquí porque quiero estar contigo; quiero construir, quiero aprender, quiero intentar, y todo eso quiero que sea contigo. hoy, mañana y cada día que me queda de vida.
+te amo de una forma tranquila e inmensa.
+de una forma que me hace querer gritalo a los 4 vientos.
+de una forma que, si me preguntaran mil veces, mil veces serías mi respuesta.
+te amo de aquí a la luna a pastos de tortuga, de la luna al sol a pasitos de caracol, del sol al mar a pasitos de calamar, del mar al desierto a pasitos de cangrejo, del desierto a la colina a pasitos de araña, de la colina al polo norte a pasitos de saltamonte, del polo norte a las estrellas a pasitos de mariquita, de las estrellas al arcoiris a pasitos de mariposa, del arcoiris al jardín a pasitos de ardillita, del jardín al prado a pasitos de caballito, y del prado al cielo infinito a pasos lentitos. 💗`;
+
+/* ============================ */
+
+/* SOBRES */
+let grid=document.getElementById("grid");
+
+textos.forEach((texto,i)=>{
+let sobre=document.createElement("div");
+sobre.className="sobre";
+sobre.innerHTML=`<div class="base"></div><div class="tapa"></div>`;
+sobre.onclick=()=>abrirCarta(sobre,texto);
+grid.appendChild(sobre);
+
+setTimeout(()=>{sobre.classList.add("visible");}, i*300);
+});
+
+/* CARTA */
+let carta=document.getElementById("carta");
+let overlay=document.getElementById("overlay");
+
+function abrirCarta(elemento,texto){
+document.querySelectorAll(".sobre").forEach(s=>s.classList.remove("abierto"));
+elemento.classList.add("abierto");
+overlay.classList.add("activo");
+carta.classList.add("activa");
+
+carta.innerHTML="";
+let i=0;
+function escribir(){
+if(i<texto.length){
+carta.innerHTML+=texto.charAt(i);
+i++;
+setTimeout(escribir,25);
+}
+}
+escribir();
+}
+
+function cerrarCarta(){
+carta.classList.remove("activa");
+overlay.classList.remove("activo");
+}
+
+/* FRASES */
+let fraseIndex=0;
+let fraseElemento=document.getElementById("fraseCancion");
+
+function cambiarFrase(){
+fraseElemento.style.opacity=0;
+setTimeout(()=>{
+fraseElemento.innerText=frasesCanciones[fraseIndex];
+fraseElemento.style.opacity=1;
+fraseIndex=(fraseIndex+1)%frasesCanciones.length;
+},500);
+}
+setInterval(cambiarFrase,3000);
+cambiarFrase();
+
+/* POLAROIDS */
+let timelineContainer=document.getElementById("timelineContainer");
+
+let indiceFoto=0;
+
+function siguienteFoto(){
+
+if(indiceFoto >= eventos.length) return;
+
+let evento=eventos[indiceFoto];
+
+let div=document.createElement("div");
+div.className="polaroid";
+
+div.innerHTML=`
+<img src="${evento.imagen}">
+<div class="caption">${evento.texto}</div>
+`;
+
+timelineContainer.appendChild(div);
+
+setTimeout(()=>{
+div.classList.add("visible");
+},100);
+
+indiceFoto++;
+}
+
+/* Mostrar la primera automáticamente */
+siguienteFoto();
+
+/* CARTA FINAL */
+let mensajeFinal=document.getElementById("mensajeFinal");
+let j=0;
+function escribirFinal(){
+if(j<textoFinal.length){
+mensajeFinal.innerHTML+=textoFinal.charAt(j);
+j++;
+setTimeout(escribirFinal,30);
+}
+}
+setTimeout(escribirFinal,2000);
+
+function preguntaFinal(){
+alert("espero que sea el primero de muchos 14 de febreros juntos...💕");
+}
+
+function iniciarMusica(){
+let audio = document.getElementById("musica");
+audio.volume = 0.4;
+
+audio.play().then(()=>{
+console.log("sí se pudo reproducir");
+}).catch(error=>{
+alert("El navegador está bloqueando el audio 😭");
+console.log(error);
+});
+}
+
+cambiarSeccion("inicio","linear-gradient(135deg,#3a0f1c,#590d22,#800f2f)");
+
+</script>
+
+<audio id="musica" loop>
+<source src="cancion.mp3" type="audio/mpeg">
+</audio>
+
+</body>
+</html>
